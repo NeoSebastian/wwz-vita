@@ -8,36 +8,59 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(wwz C CXX)
+project(valiant C CXX)
 include("${VITASDK}/share/vita.cmake" REQUIRED)
-set(VITA_APP_NAME "WWZ")
-set(VITA_TITLEID  "WWZ0000001")
-set(VITA_VERSION  "01.30")
+set(VITA_APP_NAME "Valiant Hearts")
+set(VITA_TITLEID  "VALHEARTS")
+set(VITA_MKSFOEX_FLAGS "-d ATTRIBUTE2=12")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wl,-q,--wrap,memcpy,--wrap,memmove,--wrap,memset -D_GNU_SOURCE -Wall -O3 -mfloat-abi=softfp")
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wl,-q,--allow-multiple-definition,--wrap,sceCtrlPeekBufferPositiveExt2 -D_GNU_SOURCE -Wall -O3 -fdiagnostics-color=always -fno-optimize-sibling-calls -mfloat-abi=softfp")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11 -Wno-write-strings -fpermissive -fno-rtti")
 
-add_executable(wwz
+add_executable(valiant
   loader/main.c
   loader/dialog.c
-  loader/fios.c
   loader/so_util.c
-  loader/jni_patch.c
-  loader/mpg123_patch.c
-  loader/openal_patch.c
-  loader/opengl_patch.c
+  loader/sha1.c
+  loader/ctype_patch.c
 )
 
-target_link_libraries(wwz
+target_link_libraries(valiant
   -Wl,--whole-archive pthread -Wl,--no-whole-archive
-  stdc++
+  OpenSLES
+  freetype
+  png
+  webp
+  jpeg
+  mikmod
+  z
+  zip
+  zstd
+  lzma
+  bz2
+  ssl
+  crypto
+  sndfile
+  vorbisfile
+  vorbis
+  vorbisenc
+  modplug
+  opusfile
+  opus
+  ogg
+  FLAC
   m
+  imgui
+  vitaGL
+  stdc++
+  vitashark
+  SceShaccCgExt
   mathneon
   mpg123
-  openal
-  vitaGL
-  vitashark
+  taihen_stub
   kubridge_stub
+  SceNet_stub
+  SceNetCtl_stub
   SceAppMgr_stub
   SceAppUtil_stub
   SceAudio_stub
@@ -45,28 +68,27 @@ target_link_libraries(wwz
   SceCtrl_stub
   SceCommonDialog_stub
   SceDisplay_stub
-  SceKernelDmacMgr_stub
   SceFios2_stub
   SceGxm_stub
+  SceIme_stub
   SceLibcBridge_stub
   SceShaccCg_stub
   SceSysmodule_stub
   ScePower_stub
   SceTouch_stub
+  SceMotion_stub
+  SceHid_stub
   SceVshBridge_stub
+  SceKernelDmacmgr_stub
 )
 
-vita_create_self(eboot.bin wwz UNSAFE)
-vita_create_vpk(wwz.vpk ${VITA_TITLEID} eboot.bin
+vita_create_self(eboot.bin valiant UNSAFE)
+vita_create_vpk(valiant.vpk ${VITA_TITLEID} eboot.bin
   VERSION ${VITA_VERSION}
   NAME ${VITA_APP_NAME}
-  FILE ${CMAKE_SOURCE_DIR}/sce_sys/icon0.png sce_sys/icon0.png
-       ${CMAKE_SOURCE_DIR}/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
-       ${CMAKE_SOURCE_DIR}/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
-       ${CMAKE_SOURCE_DIR}/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-)
-
-add_custom_target(copy
-  COMMAND cp eboot.bin E:/app/${VITA_TITLEID}/eboot.bin
-  DEPENDS eboot.bin
+  FILE ${CMAKE_SOURCE_DIR}/livearea/icon0.png sce_sys/icon0.png
+       ${CMAKE_SOURCE_DIR}/livearea/pic0.png sce_sys/pic0.png
+       ${CMAKE_SOURCE_DIR}/livearea/bg0.png sce_sys/livearea/contents/bg0.png
+       ${CMAKE_SOURCE_DIR}/livearea/startup.png sce_sys/livearea/contents/startup.png
+       ${CMAKE_SOURCE_DIR}/livearea/template.xml sce_sys/livearea/contents/template.xml
 )
