@@ -1,4 +1,4 @@
-/* main.c -- Valiant Hearts .so loader
+/* main.c -- World War Z .so loader
  *
  * Copyright (C) 2025 Rinnegatamante
  *
@@ -475,7 +475,7 @@ FILE *fopen_hook(char *fname, char *mode) {
 	char real_fname[256];
 	dlog("fopen(%s,%s)\n", fname, mode);
 	if (strncmp(fname, "ux0:", 4)) {
-		sprintf(real_fname, "ux0:data/valiant/%s", fname);
+		sprintf(real_fname, "ux0:data/wwz/%s", fname);
 		dlog("fopen(%s,%s) patched\n", real_fname, mode);
 		f = fopen(real_fname, mode);
 	} else {
@@ -489,7 +489,7 @@ int open_hook(const char *fname, int flags, mode_t mode) {
 	char real_fname[256];
 	dlog("open(%s)\n", fname);
 	if (strncmp(fname, "ux0:", 4)) {
-		sprintf(real_fname, "ux0:data/valiant/%s", fname);
+		sprintf(real_fname, "ux0:data/wwz/%s", fname);
 		f = open(real_fname, flags, mode);
 	} else {
 		f = open(fname, flags, mode);
@@ -546,7 +546,7 @@ int lstat_hook(const char *pathname, stat64_bionic *statbuf) {
 	struct stat st;
 	if (strncmp(pathname, "ux0:", 4)) {
 		char fname[256];
-		sprintf(fname, "ux0:data/valiant/%s", pathname);
+		sprintf(fname, "ux0:data/wwz/%s", pathname);
 		dlog("lstat(%s) fixed\n", fname);
 		res = stat(fname, &st);
 	} else {
@@ -582,7 +582,7 @@ int stat_hook(const char *pathname, stat64_bionic *statbuf) {
 	struct stat st;
 	if (strncmp(pathname, "ux0:", 4)) {
 		char fname[256];
-		sprintf(fname, "ux0:data/valiant/%s", pathname);
+		sprintf(fname, "ux0:data/wwz/%s", pathname);
 		dlog("stat(%s) fixed\n", fname);
 		res = stat(fname, &st);
 	} else {
@@ -703,7 +703,7 @@ android_DIR *opendir_fake(const char *dirname) {
 	SceUID uid;
 	if (strncmp(dirname, "ux0:", 4)) {
 		char real_fname[256];
-		sprintf(real_fname, "ux0:data/valiant/%s", dirname);
+		sprintf(real_fname, "ux0:data/wwz/%s", dirname);
 		uid = sceIoDopen(real_fname);
 	} else {
 		uid = sceIoDopen(dirname);
@@ -785,7 +785,7 @@ int access_hook(const char *pathname, int mode) {
 	dlog("access(%s)\n", pathname);
 	if (strncmp(pathname, "ux0:", 4)) {
 		char real_fname[256];
-		sprintf(real_fname, "ux0:data/valiant/%s", pathname);
+		sprintf(real_fname, "ux0:data/wwz/%s", pathname);
 		return access(real_fname, mode);
 	}
 	
@@ -796,7 +796,7 @@ int mkdir_hook(const char *pathname, int mode) {
 	dlog("mkdir(%s)\n", pathname);
 	if (strncmp(pathname, "ux0:", 4)) {
 		char real_fname[256];
-		sprintf(real_fname, "ux0:data/valiant/%s", pathname);
+		sprintf(real_fname, "ux0:data/wwz/%s", pathname);
 		return mkdir(real_fname, mode);
 	}
 	
@@ -805,7 +805,7 @@ int mkdir_hook(const char *pathname, int mode) {
 
 FILE *AAssetManager_open(void *mgr, const char *fname, int mode) {
 	char full_fname[256];
-	sprintf(full_fname, "ux0:data/valiant/%s", fname);
+	sprintf(full_fname, "ux0:data/wwz/%s", fname);
 	dlog("AAssetManager_open %s\n", full_fname);
 	return fopen(full_fname, "rb");
 }
@@ -836,7 +836,7 @@ int rmdir_hook(const char *pathname) {
 	SceUID uid;
 	if (strncmp(pathname, "ux0:", 4)) {
 		char real_fname[256];
-		sprintf(real_fname, "ux0:data/valiant/%s", pathname);
+		sprintf(real_fname, "ux0:data/wwz/%s", pathname);
 		return rmdir(real_fname);
 	}
 	
@@ -848,7 +848,7 @@ int unlink_hook(const char *pathname) {
 	SceUID uid;
 	if (strncmp(pathname, "ux0:", 4)) {
 		char real_fname[256];
-		sprintf(real_fname, "ux0:data/valiant/%s", pathname);
+		sprintf(real_fname, "ux0:data/wwz/%s", pathname);
 		return sceIoRemove(real_fname);
 	}
 	
@@ -860,7 +860,7 @@ int remove_hook(const char *pathname) {
 	SceUID uid;
 	if (strncmp(pathname, "ux0:", 4)) {
 		char real_fname[256];
-		sprintf(real_fname, "ux0:data/valiant/%s", pathname);
+		sprintf(real_fname, "ux0:data/wwz/%s", pathname);
 		return sceIoRemove(real_fname);
 	}
 	
@@ -871,7 +871,7 @@ DIR *AAssetManager_openDir(void *mgr, const char *fname) {
 	dlog("AAssetManager_opendir(%s)\n", fname);
 	if (strncmp(fname, "ux0:", 4)) {
 		char real_fname[256];
-		sprintf(real_fname, "ux0:data/valiant/%s", fname);
+		sprintf(real_fname, "ux0:data/wwz/%s", fname);
 		return opendir(real_fname);
 	}
 	
@@ -894,12 +894,12 @@ int rename_hook(const char *old_filename, const char *new_filename) {
 	dlog("rename %s -> %s\n", old_filename, new_filename);
 	char real_old[256], real_new[256];
 	if (strncmp(old_filename, "ux0:", 4)) {
-		sprintf(real_old, "ux0:data/valiant/%s", old_filename);
+		sprintf(real_old, "ux0:data/wwz/%s", old_filename);
 	} else {
 		strcpy(real_old, old_filename);
 	}
 	if (strncmp(new_filename, "ux0:", 4)) {
-		sprintf(real_new, "ux0:data/valiant/%s", new_filename);
+		sprintf(real_new, "ux0:data/wwz/%s", new_filename);
 	} else {
 		strcpy(real_new, new_filename);
 	}
@@ -1754,7 +1754,7 @@ void *pthread_main(void *arg) {
 	int (* UAF_SetDeviceBackPressed) () = (void *)so_symbol(&main_mod, "Java_com_ubisoft_uaf_UAFJNILib_setDeviceBackPressed");
 	int (* UAF_Resume) (void *env) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_uaf_UAFJNILib_resume");
 
-	sceIoMkdir("ux0:data/valiant/Files", 0777);
+	sceIoMkdir("ux0:data/wwz/Files", 0777);
 
 	sceClibPrintf("JNI_OnLoad\n");
 	JNI_OnLoad(fake_vm);
@@ -1766,7 +1766,7 @@ void *pthread_main(void *arg) {
 	//UAF_InitMobileSDK(fake_env);
 	
 	sceClibPrintf("UAF_InitNativeEngine\n");
-	UAF_InitNativeEngine(fake_env, NULL, "ux0:data/valiant", "ux0:data/valiant", "ux0:data/valiant/main.obb", 1);
+	UAF_InitNativeEngine(fake_env, NULL, "ux0:data/wwz", "ux0:data/wwz", "ux0:data/wwz/main.obb", 1);
 	
 	sceClibPrintf("UAF_Init\n");
 	int lang = -1;
@@ -1906,7 +1906,7 @@ int main(int argc, char *argv[]) {
 		fatal_error("Error libshacccg.suprx is not installed.");
 	
 	char fname[256];
-	sprintf(data_path, "ux0:data/valiant");
+	sprintf(data_path, "ux0:data/wwz");
 	
 	sceClibPrintf("Loading libuaf\n");
 	sprintf(fname, "%s/libuaf.so", data_path);
