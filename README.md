@@ -1,28 +1,18 @@
-# Valiant Hearts Vita
+# World War Z Vita
 
 <p align="center"><img src="./screenshots/game.png"></p>
 
-This is a wrapper/port of <b>Valiant Hearts: The Great War</b> for the *PS Vita*.
+This is a wrapper/port of <b>World War Z</b> for the *PS Vita*.
 
 The port works by loading the official Android ARMv7 executable in memory, resolving its imports with native functions and patching it in order to properly run.
 By doing so, it's basically as if we emulate a minimalist Android environment in which we run natively the executable as it is.
 
 ## Notes
 
-- The loader has been tested with v.1.0.4b of the game.
+- The loader has been tested with v.1.2.3 Adreno of the game.
 - It is possible to launch the game in lowend mode. This will ensure more stable framerate at the cost of graphical quality and sprites density.
 
 ## Changelog
-
-### v1.1.1
-
-- Fixed a bug that might have caused memory leak issues.
-- Fixed Polish language detection.
-
-### v1.1
-
-- Added left analog support via simulated dpad presses.
-- Added multilanguage support.
 
 ### v1.0
 
